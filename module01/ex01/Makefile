@@ -6,6 +6,7 @@ NAME        := main
 SRC_DIR        := ./src
 BUILD_DIR    := ./build
 F_CPU        := 16000000UL
+BAUD         := 115200
 PORT        := /dev/ttyUSB0
 
 #* ************************************************************************** *#
@@ -34,7 +35,7 @@ hex: bin
 	avr-objcopy -j .text -j .data -O ihex $(BUILD_DIR)/$(NAME).bin $(BUILD_DIR)/$(NAME).hex
 
 flash: hex
-	avrdude -c arduino -p m328p -P $(PORT) -b $(F_CPU) -U flash:w:$(BUILD_DIR)/$(NAME).hex
+	avrdude -c arduino -p m328p -P $(PORT) -b $(BAUD) -U flash:w:$(BUILD_DIR)/$(NAME).hex
 
 #* ************************************************************************** *#
 #* *                              CLEANUP                                   * *#
