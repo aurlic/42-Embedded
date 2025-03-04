@@ -26,11 +26,13 @@ static void handle_count(int pin) {
     // If SW1 is pressed and we're not yet at max count, increment count
     if (pin == PIND2 && count < MAX_COUNT) {
       count++;
+      display_count();
     }
 
     // If SW2 is pressed and we're not yet at max count, decrement count
     else if (pin == PIND4 && count > MIN_COUNT) {
       count--;
+      display_count();
     }
 
     // Wait for switch release
@@ -48,6 +50,5 @@ int main() {
   while (1) {
     handle_count(PIND2);
     handle_count(PIND4);
-    display_count();
   }
 }
