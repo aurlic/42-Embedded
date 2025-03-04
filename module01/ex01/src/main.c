@@ -12,7 +12,7 @@ int main(void) {
   TCCR1A |= (1 << COM1A0);
 
   // Formula: OCR1A = (CPU_Clock / (Prescaler * Desired_Frequency)) - 1
-  // Set CTC compare value to 0,5Hz at 16MHz, AVR clock, with a prescale of 256
+  // Set CTC compare value to 2Hz at 16MHz, AVR clock, with a prescale of 256
   OCR1A = 31249;
 
   // Change clock source depending on our prescaler (cf. page 143)
