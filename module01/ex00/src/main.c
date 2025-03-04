@@ -3,7 +3,7 @@
 static void delay_ms(uint16_t ms) {
   for (volatile uint16_t i = 0; i < ms; i++) {
     // Wait for about 1ms
-    for (volatile uint16_t j = 0; j < 1600; j++) {
+    for (volatile uint16_t j = 0; j < 1000; j++) {
     }
   }
 }
