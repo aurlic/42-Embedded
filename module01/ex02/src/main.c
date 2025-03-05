@@ -14,7 +14,7 @@ int main(void) {
   TCCR1A |= (1 << COM1A1);
 
   // Sets the total signal period
-  // 31249 corresponds to a 2 Hz frequency with 256 prescaler
+  // 31249 corresponds to a 1 Hz frequency with 256 prescaler
   ICR1 = 62499;
 
   // Sets the ON time to 10% of the total period
