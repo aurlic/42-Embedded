@@ -4,19 +4,27 @@ int main(void) {
   // Set PB1 as an output
   DDRB |= (1 << DDB1);
 
-  // Timer1 is using 16-bits (cf. page 120) so we need to set 2 registers
+  // Configure Timer1 for fast PWM mode (cf. page 142)
+  // This mode allows using ICR1 as TOP value (total period)
+  TCCR1B |= (1 << WGM13) | (1 << WGM12);
+  TCCR1A |= (1 << WGM11);
 
-  // Config Timer1 for CTC (cf. page 141)
-  TCCR1B |= (1 << WGM12);
-  // Instruct to invert LED when signal is matched (cf. page 140)
-  TCCR1A |= (1 << COM1A0);
+  // Configure compare mode to "Clear OC1A on Compare Match, set OC1A at BOTTOM"
+  // Allows precise control of LED duty cycle
+  TCCR1A |= (1 << COM1A1);
 
-  // Formula: OCR1A = (CPU_Clock / (Prescaler * Desired_Frequency)) - 1
-  // Set CTC compare value to 2Hz at 16MHz, AVR clock, with a prescale of 256
-  OCR1A = 31249;
+  // Sets the total signal period
+  // 31249 corresponds to a 2 Hz frequency with 256 prescaler
+  ICR1 = 31249;
 
-  // Change clock source depending on our prescaler (cf. page 143)
+  // Sets the ON time to 10% of the total period
+  // 3124 is 10% of 31249
+  OCR1A = 3124;
+
+  // Configure prescaler to 256
+  // Divides CPU clock frequency by 256 to slow down the timer (cf. page 143)
   TCCR1B |= (1 << CS12);
+
   while (1) {
     ;
   }
