@@ -38,7 +38,7 @@ int main(void) {
   // Enable global interrupt
   sei();
 
-  // Set CTC compare value to 1Hz at 1 MHz AVR clock , with a prescaler of 64
+  // Set CTC compare value to 1Hz at 16 MHz AVR clock , with a prescaler of 256
   OCR1A = 62499;
 
   // Start timer at Fcpu /256
