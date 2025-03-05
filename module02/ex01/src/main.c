@@ -12,7 +12,7 @@ static void uart_tx(unsigned char data) {
   UDR0 = data;
 }
 
-static void uart_printstr(char *s) {
+static void uart_printstr(const char *s) {
   // Transmit character until NULL is reached
   while (*s > 0)
     uart_tx(*s++);
