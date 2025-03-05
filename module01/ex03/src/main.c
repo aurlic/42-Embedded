@@ -14,14 +14,14 @@ static void handle_press(int pin) {
     // speed
     if (pin == PIND2 && cycle_speed < MAX_CYCLE) {
       cycle_speed++;
-      OCR1A = 3124 * cycle_speed;
+      OCR1A = 6249 * cycle_speed;
     }
 
     // If SW2 is pressed and we're not yet at max cycle speed, decrement cycle
     // speed
     else if (pin == PIND4 && cycle_speed > MIN_CYCLE) {
       cycle_speed--;
-      OCR1A = 3124 * cycle_speed;
+      OCR1A = 6249 * cycle_speed;
     }
 
     // Wait for switch release
@@ -46,10 +46,10 @@ int main(void) {
   TCCR1A |= (1 << COM1A1);
 
   // Sets the total signal period
-  ICR1 = 31249;
+  ICR1 = 62499;
 
   // Sets the ON time to 10% of the total period (default)
-  OCR1A = 3124;
+  OCR1A = 6249;
 
   // Configure prescaler to 256
   TCCR1B |= (1 << CS12);

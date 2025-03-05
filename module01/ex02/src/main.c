@@ -15,11 +15,11 @@ int main(void) {
 
   // Sets the total signal period
   // 31249 corresponds to a 2 Hz frequency with 256 prescaler
-  ICR1 = 31249;
+  ICR1 = 62499;
 
   // Sets the ON time to 10% of the total period
   // 3124 is 10% of 31249
-  OCR1A = 3124;
+  OCR1A = 6249;
 
   // Configure prescaler to 256
   // Divides CPU clock frequency by 256 to slow down the timer (cf. page 143)
