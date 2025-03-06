@@ -1,6 +1,6 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <stdint.h>
+#include <ctype.h>
 #include <util/delay.h>
 
 #define UBRR_VAL ((16000000 / (8UL * 115200)) - 1UL)
@@ -48,8 +48,6 @@ int main(void) {
   while (1)
     ;
 }
-
-#include <ctype.h>
 
 ISR(USART_RX_vect) {
   // Store buffer
