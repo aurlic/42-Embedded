@@ -11,11 +11,16 @@
 const char *user = "aurlic";
 const char *password = "sup3rsafepass!";
 
-char input_user[BUFF_MAX] = {0};
-char input_pass[BUFF_MAX] = {0};
+char input_user[BUFF_MAX];
+char input_pass[BUFF_MAX];
 uint8_t input_index = 0;
-// 0: prompt username, 1: entering username, 2: prompt
-// password, 3: entering password, 4: validate
+/*
+0: prompt username
+1: entering username
+2: prompt password
+3: entering password
+4: validate
+*/
 uint8_t state = 0;
 
 static void uart_tx(unsigned char data) {
@@ -79,8 +84,6 @@ int main(void) {
   state = 0;
 
   while (1) {
-
-    // Prompt for username
     switch (state) {
     case 0:
       uart_printstr("Enter your login:\n\r");
@@ -90,15 +93,13 @@ int main(void) {
       state = 1;
       break;
 
-    // Prompt password
     case 2:
       uart_printstr("\n\r\tPassword: ");
-      memset(input_pass, 0, sizeof(input_pass));
+      memset(input_user, 0, sizeof(input_user));
       input_index = 0;
       state = 3;
       break;
 
-    // Validate credentials
     case 4:
       if (strcmp(input_user, user) == 0 && strcmp(input_pass, password) == 0) {
         uart_printstr("\n\rHello aurlic!\n\rShall we play a game?");
@@ -118,7 +119,6 @@ int main(void) {
 ISR(USART_RX_vect) {
   uint8_t data = UDR0;
 
-  // Username input
   if (state == 1) {
     if (data == ENTER) {
       input_user[input_index] = '\0';
