@@ -28,7 +28,7 @@ void init_timer0() {
   TCCR0A |= (1 << WGM01);
   TCCR0B |= (1 << CS02) | (1 << CS00);
 
-  OCR0A = 156;
+  OCR0A = 156; // 20ms at 16MHz / 1024
   TIMSK0 = (1 << OCIE0A);
 }
 
