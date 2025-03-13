@@ -1,63 +1,38 @@
 #include <avr/interrupt.h>
 #include <avr/io.h>
-#include <ctype.h>
+#include <stdbool.h>
 #include <util/delay.h>
 
-#define UBRR_VAL ((16000000 / (8UL * 115200)) - 1UL)
+volatile bool is_toggled = false;
 
-static void uart_tx(unsigned char data) {
-  /* Check transmit buffer is empty*/
-  while (!(UCSR0A & (1 << UDRE0)))
-    ;
-  /* Put data into buffer, sends the data */
-  UDR0 = data;
+void init_interrupt() {
+  // Rising edge on INT0 triggers interrupt
+  EICRA |= (1 << ISC01) | (1 << ISC00);
+
+  // Enable INT0 interrupt
+  EIMSK |= (1 << INT0);
+
+  // Enable global interrupts
+  sei();
 }
 
-unsigned char uart_rx() {
-  /* Wait for data to be received */
-  while (!(UCSR0A & (1 << RXC0)))
-    ;
-  /* Get and return received data from buffer */
-  return UDR0;
-}
-
-static void uart_init() {
-  // Double transfer rate (cf. page 201)
-  UCSR0A |= (1 << U2X0);
-
-  // Set baud rate
-  UBRR0H = (unsigned char)(UBRR_VAL >> 8);
-  UBRR0L = (unsigned char)UBRR_VAL;
-
-  // Enable receiver, transmitter and interrupt (cf. page 202)
-  UCSR0B |= (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
-
-  // Set frame format: 8data, 2stop (cf. page 203)
-  UCSR0C |= (1 << UCSZ00) | (1 << UCSZ01);
+void init_pins() {
+  DDRB |= (1 << PB0);
+  PORTD |= (1 << PD2);
 }
 
 int main(void) {
-  uart_init();
+  init_pins();
+  init_interrupt();
 
-  // Enable global interrupt
-  sei();
-
-  // Generate a receive complete interrupt (cf. page 200)
-  UCSR0A |= (1 << RXC0);
-
-  while (1)
-    ;
+  while (1) {
+    if (is_toggled) {
+      PORTB ^= (1 << PB0);
+      _delay_ms(250);
+      is_toggled = false;
+    }
+  }
 }
 
-ISR(USART_RX_vect) {
-  // Store buffer
-  uint8_t data = UDR0;
-
-  // Invert and write char case
-  if (isupper(data))
-    data = tolower(data);
-  if (islower(data))
-    data = toupper(data);
-
-  uart_tx(data);
-}
+// Interrupt Service Routine (ISR) for INT0
+ISR(INT0_vect) { is_toggled = true; }
